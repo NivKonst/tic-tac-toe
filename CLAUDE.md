@@ -32,6 +32,8 @@ Everything is contained in `tic-tac-toe.html` in three sections:
 
 Remote: `https://github.com/NivKonst/tic-tac-toe` (branch: `master`)
 
+**Always commit and push every change made to this project to the GitHub repository above.** No change should be left uncommitted.
+
 ```bash
 git add tic-tac-toe.html
 git commit -m "your message"

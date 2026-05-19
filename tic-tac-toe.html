@@ -165,24 +165,34 @@
       [0,4,8],[2,4,6]
     ];
 
-    const cartmanSVG = `<img src="images/cartman.png" alt="Cartman"/>`;
-    const stanSVG    = `<img src="images/stan.png"    alt="Stan"/>`;
+    const cells   = document.querySelectorAll('.cell');
+    const status  = document.getElementById('status');
+    const scoreDr = document.getElementById('score-draw');
+
+    const PLAYERS = {
+      X: {
+        img:      `<img src="images/cartman.png" alt="Cartman"/>`,
+        turnMsg:  "Cartman's turn",
+        winMsg:   "Cartman wins! Respect my authoritah!",
+        scoreEl:  document.getElementById('score-x'),
+      },
+      O: {
+        img:      `<img src="images/stan.png" alt="Stan"/>`,
+        turnMsg:  "Stan's turn",
+        winMsg:   "Stan wins! Oh my God, Stan won!",
+        scoreEl:  document.getElementById('score-o'),
+      },
+    };
 
     let board, current, over;
     const score = { X: 0, O: 0, D: 0 };
-
-    const cells   = document.querySelectorAll('.cell');
-    const status  = document.getElementById('status');
-    const scoreX  = document.getElementById('score-x');
-    const scoreO  = document.getElementById('score-o');
-    const scoreDr = document.getElementById('score-draw');
 
     function init() {
       board   = Array(9).fill('');
       current = 'X';
       over    = false;
       cells.forEach(c => { c.innerHTML = ''; c.className = 'cell'; });
-      status.textContent = "Cartman's turn";
+      status.textContent = PLAYERS[current].turnMsg;
     }
 
     function checkWinner() {
@@ -200,7 +210,7 @@
         if (over || board[i]) return;
 
         board[i] = current;
-        cell.innerHTML = current === 'X' ? cartmanSVG : stanSVG;
+        cell.innerHTML = PLAYERS[current].img;
         cell.classList.add('taken', current.toLowerCase());
 
         const result = checkWinner();
@@ -211,18 +221,15 @@
             score.D++;
             scoreDr.textContent = score.D;
           } else {
-            const name = result.winner === 'X' ? 'Cartman' : 'Stan';
-            status.textContent = result.winner === 'X'
-              ? "Cartman wins! Respect my authoritah!"
-              : "Stan wins! Oh my God, Stan won!";
+            const player = PLAYERS[result.winner];
+            status.textContent = player.winMsg;
             result.line.forEach(idx => cells[idx].classList.add('winner'));
             score[result.winner]++;
-            scoreX.textContent = score.X;
-            scoreO.textContent = score.O;
+            player.scoreEl.textContent = score[result.winner];
           }
         } else {
           current = current === 'X' ? 'O' : 'X';
-          status.textContent = current === 'X' ? "Cartman's turn" : "Stan's turn";
+          status.textContent = PLAYERS[current].turnMsg;
         }
       });
     });
